@@ -2,16 +2,17 @@ img {
   margin: 10px;
   border: 5px solid #555;
   width: 10%;
+  cursor: pointer;
+}
+
+.selected {
+  border: 5px solid rgb(0, 195, 255);
 }
 
 .image-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.selected {
-  border: 5px solid rgb(0, 195, 255);
 }
 
 p {
@@ -24,4 +25,8 @@ button {
 
 .hidden {
   display: none;
+}
+
+.container {
+  text-align: center;
 }

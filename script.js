@@ -1,9 +1,7 @@
-//your code here
-
 const imageGrid = document.getElementById("image-grid");
 const resetBtn = document.getElementById("reset");
 const verifyBtn = document.getElementById("verify");
-const message = document.getElementById("msg");
+const message = document.getElementById("h");
 const resultPara = document.getElementById("para");
 
 const imageUrls = [
@@ -18,34 +16,29 @@ let selectedImages = [];
 let imageElements = [];
 
 function shuffleAndRenderImages() {
-  // Step 1: Reset everything
   selectedImages = [];
   imageElements = [];
   imageGrid.innerHTML = "";
   resultPara.textContent = "";
-  message.textContent =
-    "Please click on the identical tiles to verify that you are not a robot";
+  message.textContent = "Please click on the identical tiles to verify that you are not a robot.";
   verifyBtn.classList.add("hidden");
   resetBtn.classList.add("hidden");
 
-  // Step 2: Duplicate a random image
-  const duplicatedIndex = Math.floor(Math.random() * imageUrls.length);
-  const imagesWithDuplicate = [...imageUrls, imageUrls[duplicatedIndex]];
+  const duplicateIndex = Math.floor(Math.random() * imageUrls.length);
+  const imagesWithDuplicate = [...imageUrls, imageUrls[duplicateIndex]];
 
-  // Step 3: Shuffle
   for (let i = imagesWithDuplicate.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [imagesWithDuplicate[i], imagesWithDuplicate[j]] = [
-      imagesWithDuplicate[j],
-      imagesWithDuplicate[i]
-    ];
+    [imagesWithDuplicate[i], imagesWithDuplicate[j]] = [imagesWithDuplicate[j], imagesWithDuplicate[i]];
   }
 
-  // Step 4: Render
-  imagesWithDuplicate.forEach((url, index) => {
+  imagesWithDuplicate.forEach((url) => {
     const img = document.createElement("img");
     img.src = url;
-    img.dataset.index = index;
+    const classIndex = imageUrls.indexOf(url);
+    if (classIndex !== -1) {
+      img.classList.add(`img${classIndex + 1}`);
+    }
     img.addEventListener("click", () => handleImageClick(img, url));
     imageGrid.appendChild(img);
     imageElements.push(img);
@@ -53,11 +46,7 @@ function shuffleAndRenderImages() {
 }
 
 function handleImageClick(imgElement, imgUrl) {
-  // Prevent more than 2 selections
-  if (
-    selectedImages.length >= 2 ||
-    imgElement.classList.contains("selected")
-  ) {
+  if (selectedImages.length >= 2 || imgElement.classList.contains("selected")) {
     return;
   }
 
@@ -79,8 +68,8 @@ resetBtn.addEventListener("click", () => {
   verifyBtn.classList.add("hidden");
   resetBtn.classList.add("hidden");
   resultPara.textContent = "";
-  message.textContent =
-    "Please click on the identical tiles to verify that you are not a robot";
+  message.textContent = "Please click on the identical tiles to verify that you are not a robot.";
+  imageElements.forEach(img => img.style.pointerEvents = "auto");
 });
 
 verifyBtn.addEventListener("click", () => {
@@ -89,12 +78,11 @@ verifyBtn.addEventListener("click", () => {
   if (img1.url === img2.url) {
     resultPara.textContent = "You are a human. Congratulations!";
   } else {
-    resultPara.textContent =
-      "We can't verify you as a human. You selected the non-identical tiles.";
+    resultPara.textContent = "We can't verify you as a human. You selected the non-identical tiles.";
   }
 
   verifyBtn.classList.add("hidden");
+  imageElements.forEach(img => img.style.pointerEvents = "none");
 });
 
-// Initialize on page load
 shuffleAndRenderImages();
